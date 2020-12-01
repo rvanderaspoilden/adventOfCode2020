@@ -1,0 +1,6 @@
+C:\Users\rodol\RiderProjects\AdventOfCode1\Day1\bin\Debug\Day1.exe
+C:\Users\rodol\RiderProjects\AdventOfCode1\Day1\bin\Debug\Day1.pdb
+C:\Users\rodol\RiderProjects\AdventOfCode1\Day1\obj\Debug\Day1.csprojAssemblyReference.cache
+C:\Users\rodol\RiderProjects\AdventOfCode1\Day1\obj\Debug\Day1.csproj.CoreCompileInputs.cache
+C:\Users\rodol\RiderProjects\AdventOfCode1\Day1\obj\Debug\Day1.exe
+C:\Users\rodol\RiderProjects\AdventOfCode1\Day1\obj\Debug\Day1.pdb
