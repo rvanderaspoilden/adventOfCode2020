@@ -21,13 +21,13 @@ namespace Day4 {
         private const string CM = "cm";
         private const string IN = "in";
 
-        private static readonly string[] EYE_COLORS = new[] {"amb", "blu", "brn", "gry", "grn", "hzl", "oth"};
-        
+        private static readonly string[] EYE_COLORS = new[] { "amb", "blu", "brn", "gry", "grn", "hzl", "oth" };
+
         public static void Main(string[] args) {
             string[] lines = File.ReadAllLines("../../Input/input.txt");
             int passportValidCounter = 0;
             HashSet<string> passportKeys = new HashSet<string>();
-            
+
             foreach (string line in lines) {
                 if (line.Length == 0) {
                     passportKeys.Clear();
@@ -41,66 +41,74 @@ namespace Day4 {
 
                         switch (key) {
                             case BYR:
-                                numericValue= int.Parse(keyValue[1]);
+                                numericValue = int.Parse(keyValue[1]);
 
                                 if (numericValue >= 1920 && numericValue <= 2002) {
                                     passportKeys.Add(key);
                                 }
+
                                 break;
-                            
+
                             case IYR:
                                 numericValue = int.Parse(keyValue[1]);
 
                                 if (numericValue >= 2010 && numericValue <= 2020) {
                                     passportKeys.Add(key);
                                 }
+
                                 break;
-                            
+
                             case EYR:
                                 numericValue = int.Parse(keyValue[1]);
 
                                 if (numericValue >= 2020 && numericValue <= 2030) {
                                     passportKeys.Add(key);
                                 }
+
                                 break;
-                            
+
                             case HGT:
                                 if (keyValue[1].Length >= 3) {
                                     int.TryParse(keyValue[1].Substring(0, keyValue[1].Length - 2), out numericValue);
-                                    if ((keyValue[1].IndexOf(IN) != -1 && numericValue >= 59 && numericValue <= 76) || (keyValue[1].IndexOf(CM) != -1 && numericValue >= 150 && numericValue <= 193)) {
+                                    if ((keyValue[1].IndexOf(IN) != -1 && numericValue >= 59 && numericValue <= 76) ||
+                                        (keyValue[1].IndexOf(CM) != -1 && numericValue >= 150 && numericValue <= 193)) {
                                         passportKeys.Add(key);
                                     }
                                 }
+
                                 break;
-                            
+
                             case HCL:
                                 if (IsValidHairColor(keyValue[1])) {
                                     passportKeys.Add(key);
                                 }
+
                                 break;
-                            
+
                             case ECL:
                                 if (EYE_COLORS.Contains(keyValue[1])) {
                                     passportKeys.Add(key);
                                 }
+
                                 break;
-                            
+
                             case PID:
                                 if (keyValue[1].Length == 9 && int.TryParse(keyValue[1], out numericValue)) {
                                     passportKeys.Add(key);
                                 }
+
                                 break;
                         }
                     }
-                    
-                
+
+
                     if (passportKeys.Count == 8 || (passportKeys.Count == 7 && !passportKeys.Contains(CID))) {
                         passportValidCounter++;
                         passportKeys.Clear();
                     }
                 }
             }
-            
+
             Console.WriteLine("Passports valid : " + passportValidCounter);
         }
 
@@ -114,7 +122,7 @@ namespace Day4 {
                     break;
                 }
             }
-            
+
             return value.Length == 7 && value[0] == HASHTAG && isValid;
         }
     }
