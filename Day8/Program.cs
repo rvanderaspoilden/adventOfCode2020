@@ -2,14 +2,33 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace Day8 {
 
     class Program {
 
         static void Main(string[] args) {
-            Gameboy gameboy = new Gameboy(File.ReadAllLines(Path.Combine(Environment.CurrentDirectory, "../../../Input/input.txt")));
-            gameboy.Run();
+            Gameboy gameboy = new Gameboy();
+
+            string input = File.ReadAllText(Path.Combine(Environment.CurrentDirectory, "../../../Input/input.txt"));
+
+            string pattern = @"(nop|jmp)";
+            Match match = Regex.Match(input, pattern);
+
+            while(match.Success) {
+                string newInput = input;
+
+                newInput = newInput.Remove(match.Index, match.Length).Insert(match.Index, match.Value == "jmp" ? "nop" : "jmp");
+
+                gameboy.SetInstructions(newInput.Split("\r\n"));
+
+                if (gameboy.Run())
+                    break;
+
+                match = match.NextMatch();
+            }
+
             Console.WriteLine("Result acc : " + gameboy.acc);
         }
     }
@@ -24,17 +43,21 @@ namespace Day8 {
         private const string JMP = "jmp";
         private const string ACC = "acc";
 
-        public Gameboy(string[] input) {
+        public void SetInstructions(string[] input) {
             this.instructions = input
                 .ToList()
                 .Select(Instruction.ConvertToInstruction)
                 .ToArray();
         }
 
-        public void Run() {
+        public bool Run() {
+            acc = 0;
+            pos = 0;
+            oldPositions.Clear();
+
             while (pos < instructions.Length) {
                 if (!oldPositions.Add(pos)) {
-                    break;
+                    return false;
                 }
 
                 Instruction currentInstruction = instructions[pos];
@@ -51,6 +74,8 @@ namespace Day8 {
 
                 pos++;
             }
+
+            return true;
         }
     }
 
