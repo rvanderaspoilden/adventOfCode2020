@@ -13,7 +13,18 @@ namespace Day9 {
 
             int preamble = 25;
 
-            Console.WriteLine("Result is " + FindWeaknessNumber(numbers, preamble));
+            long[] range = GetRangeOfNumbers(numbers, preamble);
+            Console.WriteLine("Result is " + (range.Min() + range.Max()));
+        }
+
+        public static long[] CreateArrays(long[] input, int startIdx, int endIdx) {
+            List<long> numbers = new List<long>();
+
+            for (int i = startIdx; i <= endIdx; i++) {
+                numbers.Add(input[i]);
+            }
+
+            return numbers.ToArray();
         }
 
         public static long FindWeaknessNumber(long[] numbers, int preamble) {
@@ -32,6 +43,25 @@ namespace Day9 {
             }
 
             return 0;
+        }
+
+        public static long[] GetRangeOfNumbers(long[] numbers, int preamble) {
+            long weakness = FindWeaknessNumber(numbers, preamble);
+
+            for (int i = 0; i < numbers.Length; i++) {
+                for (int j = i + 1; j < numbers.Length; j++) {
+                    long[] range = CreateArrays(numbers, i, j);
+                    long sum = range.ToList().Sum();
+                    
+                    if (sum > weakness) {
+                        break;
+                    } else if (sum == weakness) {
+                        return range;
+                    }
+                }
+            }
+
+            return null;
         }
     }
 }
