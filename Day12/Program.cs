@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace Day12 {
     class Program {
@@ -17,31 +16,31 @@ namespace Day12 {
             foreach (Action action in actions) {
                 switch (action.actionType) {
                     case ActionType.F:
-                        ship.MoveForward(action.value);
+                        ship.MoveToWaypoint(action.value);
                         break;
 
                     case ActionType.R:
-                        ship.Rotate(action.value);
+                        ship.Rotate(action.value, 1);
                         break;
 
                     case ActionType.L:
-                        ship.Rotate(action.value * -1);
+                        ship.Rotate(action.value, -1);
                         break;
 
                     case ActionType.E:
-                        ship.Move(action.value, Direction.E);
+                        ship.MoveWaypoint(action.value, Direction.E);
                         break;
 
                     case ActionType.W:
-                        ship.Move(action.value, Direction.W);
+                        ship.MoveWaypoint(action.value, Direction.W);
                         break;
 
                     case ActionType.S:
-                        ship.Move(action.value, Direction.S);
+                        ship.MoveWaypoint(action.value, Direction.S);
                         break;
 
                     case ActionType.N:
-                        ship.Move(action.value, Direction.N);
+                        ship.MoveWaypoint(action.value, Direction.N);
                         break;
                 }
             }
@@ -60,23 +59,11 @@ namespace Day12 {
         }
     }
 
-    public class Ship {
+    public class Waypoint {
         public Vector2 position;
-        public Direction direction;
 
-        public Ship() {
-            this.position = new Vector2(0, 0);
-            this.direction = Direction.E;
-        }
-
-        public void MoveForward(int value) {
-            this.Move(value, this.direction);
-        }
-
-        public void Rotate(int degree) {
-            int newDegree = 360 + (int) this.direction + degree;
-            newDegree = newDegree >= 360 ? newDegree % 360 : newDegree;
-            this.direction = (Direction) Enum.Parse(typeof(Direction), newDegree.ToString());
+        public Waypoint() {
+            this.position = new Vector2(10, 1);
         }
 
         public void Move(int value, Direction direction) {
@@ -96,6 +83,40 @@ namespace Day12 {
                 case Direction.S:
                     this.position.y -= value;
                     break;
+            }
+        }
+    }
+
+    public class Ship {
+        public Vector2 position;
+        public Direction direction;
+        public Waypoint waypoint;
+
+        public Ship() {
+            this.position = new Vector2(0, 0);
+            this.direction = Direction.E;
+            this.waypoint = new Waypoint();
+        }
+
+        public void MoveToWaypoint(int multiplier) {
+            this.position.x += multiplier * this.waypoint.position.x;
+            this.position.y += multiplier * this.waypoint.position.y;
+        }
+
+        public void MoveWaypoint(int value, Direction direction) {
+            this.waypoint.Move(value, direction);
+        }
+
+        public void Rotate(int degree, int dir) {
+            int newDegree = 360 + degree;
+            newDegree = newDegree >= 360 ? newDegree % 360 : newDegree;
+
+            for (int i = 0; i < newDegree; i += 90) {
+                if (dir == 1) {
+                    this.waypoint.position = new Vector2(this.waypoint.position.y, -this.waypoint.position.x);
+                } else {
+                    this.waypoint.position = new Vector2(-this.waypoint.position.y, this.waypoint.position.x);
+                }
             }
         }
 
